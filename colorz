@@ -1,0 +1,183 @@
+#! /usr/bin/env ruby
+# coding: utf-8
+# 
+# colorz
+#   Complex domain coloring
+# Usage: colorz [options] FUNCTION
+# Options:
+#   -size XxY
+#   -range MIN,MAX
+#   -o OUTPUT_FILE
+
+
+require "cmath"
+require "chunky_png"
+require "rgb"
+require "optparse"
+
+include Math
+
+class DomainColoring
+
+  attr_accessor :width, :height, :min_r, :min_i, :max_r, :max_i
+
+  def initialize(options)
+    @width = options[:width]
+    @height = options[:height]
+    @min_r = options[:min_r]
+    @min_i = options[:min_i]
+    @max_r = options[:max_r]
+    @max_i = options[:max_i]
+  end
+
+  def intensity(r)
+    if r == 0
+      r
+    else
+      log_2 = log2(r)
+      log_2 -= log_2.floor
+    end
+  end
+
+  def grid(z)
+    real = sin(z.real * PI).abs
+    imag = sin(z.imag * PI).abs
+    grid = [real, imag].min
+    grid = [log(grid)/log(200), 1.0].min
+    grid = 1 - grid*grid
+    return grid
+  end
+
+  def pulse(x)
+    log_sq = [log(sqrt(x)), -1.0].max
+    pulse = log_sq*log_sq
+    return pulse
+  end
+
+  def comp_to_hsl(z)
+    radius, theta = z.polar
+    h = 0.5*theta/PI
+    r = intensity(radius)
+    s = sqrt(sin(r * PI))
+    l = 1.0
+    begin
+      l = [0.5 * grid(z) * (2.0 - s) + pulse(s), 1.0].min
+    rescue => e
+      puts s
+    end
+
+    return [h, s, l]
+  end
+
+  def complex_function(z, script)
+    extend CMath
+    eval(script)
+  end
+
+  def plot(script)
+    png = ChunkyPNG::Image.new(@width, @height, ChunkyPNG::Color::TRANSPARENT)
+    @height.times do |y|
+      imag = @max_i - y*(@max_i - @min_i)/@height
+      @width.times do |x|
+        real = @min_r + x*(@max_r - @min_r)/@width
+        z = Complex.rect(real, imag)
+        comp = complex_function(z, script)
+        h, s, l = comp_to_hsl(comp)
+        r, g, b = RGB::Color.from_fractions(h, s, l).to_rgb
+        png[x, y] = ChunkyPNG::Color.rgb(r, g, b)
+      end
+    end
+    
+    return png
+  end
+
+end #class
+
+
+class ColorZ
+
+  def opt_parse(argv)
+    opts = {}
+    
+    OptionParser.new do |opt|
+      begin
+        opt.version = '0.1.0'
+        opt.banner = "Complex domain coloring"
+        opt.banner += " FUNCTION"
+        opt.separator("\nOptions:")
+        opt.on('-s=WxH', '--size',
+          'size(width=W, height=H) of the output image') {|v| opts[:s] = v}
+        opt.on('-r=MIN,MAX', '--range',
+          'coloring range (e.g. -r=-2-2i,+2+2i)') {|v| opts[:r] = v}
+        opt.on('-o=OUTPUT_FILE', '--out',
+          'file path of output image') {|v| opts[:o] = v}
+
+        opt.parse!(ARGV)
+      rescue => e
+        $stderr.puts "ERROR: #{e}.\n#{opt}"
+        exit
+      end
+    end
+    
+    return opts
+  end
+
+  def main(argv)
+    opts = opt_parse(argv)
+    
+    size = opts[:s]
+    if size
+      width, height = size.split("x").map {|n| n.to_i}
+    else
+      width, height = 400, 400
+    end
+    
+    range = opts[:r]
+    if range
+      min, max = range.split(",").map {|s| s.to_c} 
+      min_r = min.real.to_f
+      min_i = min.imag.to_f
+      max_r = max.real.to_f
+      max_i = max.imag.to_f
+    else
+      min_r = -4.0
+      min_i = -4.0
+      max_r = +4.0
+      max_i = +4.0
+    end
+    
+    out = opts[:o]
+    if out
+      output_file = out
+    else
+      output_file = "colorz.png"
+    end
+    
+    dom_color = DomainColoring.new(
+    {
+      min_r: min_r,
+      min_i: min_i,
+      max_r: max_r,
+      max_i: max_i,
+
+      width: width,
+      height: height
+    })
+    
+    
+    script = argv.join(" ")
+    png = dom_color.plot(script)
+    png.save(output_file)
+    
+  end # main
+  
+end # class
+
+
+#################################
+
+ColorZ.new.main(ARGV)
+
+exit 0
+
+# EOF
