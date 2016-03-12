@@ -23,12 +23,18 @@ class DomainColoring
   def initialize(options)
     @width = options[:width]
     @height = options[:height]
-    @min_r = options[:min_r]
-    @min_i = options[:min_i]
-    @max_r = options[:max_r]
-    @max_i = options[:max_i]
+    @min_r, @max_r = min_max(options[:min_r], options[:max_r])
+    @min_i, @max_i = min_max(options[:min_i], options[:max_i])
   end
 
+  def min_max(a, b)
+    if a <= b
+      [a, b]
+    else
+      [b, a]
+    end
+  end
+  
   def intensity(r)
     if r == 0
       r
@@ -144,10 +150,10 @@ class ColorZ
     range = opts[:r]
     if range
       min, max = range.split(",").map {|s| s.to_c} 
-      min_r = [min.real, max.real].min.to_f
-      min_i = [min.imag, max.imag].min.to_f
-      max_r = [min.real, max.real].max.to_f
-      max_i = [min.imag, max.imag].max.to_f
+      min_r = min.real.to_f
+      min_i = min.imag.to_f
+      max_r = max.real.to_f
+      max_i = max.imag.to_f
     else
       min_r = -4.0
       min_i = -4.0
