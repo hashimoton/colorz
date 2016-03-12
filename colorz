@@ -42,8 +42,8 @@ class DomainColoring
     real = sin(z.real * PI).abs
     imag = sin(z.imag * PI).abs
     grid = [real, imag].min
-    grid = [log(grid)/log(200), -1.0].max
-    grid = 1 - grid*grid
+    grid = [log(grid) / log(200), -1.0].max
+    grid = 1 - grid * grid
     
     return grid
   end
@@ -57,7 +57,7 @@ class DomainColoring
 
   def comp_to_hsl(z)
     radius, theta = z.polar
-    h = 0.5*theta/PI
+    h = 0.5 * theta / PI
     r = intensity(radius)
     s = sqrt(sqrt(sin(r * PI)))
     l = [0.5 * grid(z) * (2.0 - s) + pulse(s), 1.0].min
@@ -65,24 +65,28 @@ class DomainColoring
     return [h, s, l]
   end
 
-  def complex_function(z, script)
+  def complex_function(script)
     extend CMath
-    
-    result = eval(script)
-    result = Complex.rect(0, result.imag) if result.real.nan?
-    result = Complex.rect(result.real, 0) if result.imag.nan?
-    
-    return result
+    zfunc = eval <<-EOS
+      lambda do |z|
+        result = #{script}
+        result = Complex.rect(0, result.imag) if result.real.nan?
+        result = Complex.rect(result.real, 0) if result.imag.nan?
+        return result
+      end
+    EOS
   end
-
+  
   def plot(script)
+    zfunc = complex_function(script)
+    
     png = ChunkyPNG::Image.new(@width, @height, ChunkyPNG::Color::TRANSPARENT)
     @height.times do |y|
       imag = @max_i - y*(@max_i - @min_i)/@height
       @width.times do |x|
         real = @min_r + x*(@max_r - @min_r)/@width
         z = Complex.rect(real, imag)
-        comp = complex_function(z, script)
+        comp = zfunc.call(z)
         h, s, l = comp_to_hsl(comp)
         r, g, b = RGB::Color.from_fractions(h, s, l).to_rgb
         png[x, y] = ChunkyPNG::Color.rgb(r, g, b)
@@ -168,7 +172,6 @@ class ColorZ
       width: width,
       height: height
     })
-    
     
     script = argv.join(" ")
     script = DEFAULT_FUNTION if script.empty?
