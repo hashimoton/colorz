@@ -5,10 +5,9 @@
 #   Complex domain coloring
 # Usage: colorz [options] FUNCTION
 # Options:
-#   -size XxY
-#   -range MIN,MAX
+#   -s XxY
+#   -r MIN,MAX
 #   -o OUTPUT_FILE
-
 
 require "cmath"
 require "chunky_png"
@@ -98,13 +97,17 @@ end #class
 
 class ColorZ
 
+  DEFAULT_WIDTH = 400
+  DEFAULT_HEIGHT = 400
+  DEFAULT_FUNTION = "z"
+
   def opt_parse(argv)
     opts = {}
     
     OptionParser.new do |opt|
       begin
         opt.version = '0.1.0'
-        opt.banner = "Complex domain coloring"
+        opt.banner = "Complex domain coloring\n" + opt.banner
         opt.banner += " FUNCTION"
         opt.separator("\nOptions:")
         opt.on('-s=WxH', '--size',
@@ -131,7 +134,7 @@ class ColorZ
     if size
       width, height = size.split("x").map {|n| n.to_i}
     else
-      width, height = 400, 400
+      width, height = DEFAULT_WIDTH, DEFAULT_HEIGHT
     end
     
     range = opts[:r]
@@ -168,10 +171,11 @@ class ColorZ
     
     
     script = argv.join(" ")
-    script = "z" if script.empty?
+    script = DEFAULT_FUNTION if script.empty?
     png = dom_color.plot(script)
     png.save(output_file)
     
+    puts File.expand_path(output_file)
   end # main
   
 end # class
