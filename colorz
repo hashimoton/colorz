@@ -5,9 +5,10 @@
 #   Complex domain coloring
 # Usage: colorz [options] FUNCTION
 # Options:
-#   -s XxY
-#   -r MIN,MAX
+#   -i INPUT_FILE
 #   -o OUTPUT_FILE
+#   -r MIN,MAX
+#   -s XxY
 
 require "cmath"
 require "chunky_png"
@@ -18,13 +19,16 @@ include Math
 
 class DomainColoring
 
-  attr_accessor :width, :height, :min_r, :min_i, :max_r, :max_i
+  attr_accessor :width, :height,
+    :min_r, :min_i, :max_r, :max_i,
+    :is_tile
 
   def initialize(options)
-    @width = options[:width]
-    @height = options[:height]
+    @width = [options[:width], 1].max
+    @height = [options[:height], 1].max
     @min_r, @max_r = min_max(options[:min_r], options[:max_r])
     @min_i, @max_i = min_max(options[:min_i], options[:max_i])
+    @is_tile = options[:is_tile]
   end
 
   def min_max(a, b)
@@ -76,8 +80,8 @@ class DomainColoring
     zfunc = eval <<-EOS
       lambda do |z|
         result = #{script}
-        result = Complex.rect(0, result.imag) if result.real.to_f.nan?
-        result = Complex.rect(result.real, 0) if result.imag.to_f.nan?
+        result = Complex.rect(0.0, result.imag) if result.real.to_f.nan?
+        result = Complex.rect(result.real, 0.0) if result.imag.to_f.nan?
         return result
       end
     EOS
@@ -85,12 +89,23 @@ class DomainColoring
   
   def plot(script)
     zfunc = complex_function(script)
+
+    if @is_tile
+      divisor_i = @height
+      divisor_r = @width
+    else
+      divisor_i = @height - 1
+      divisor_r = @width - 1
+    end
     
-    png = ChunkyPNG::Image.new(@width, @height, ChunkyPNG::Color::TRANSPARENT)
+    delta_i = (@max_i - @min_i)/[divisor_i, 1.0].max
+    delta_r = (@max_r - @min_r)/[divisor_r, 1.0].max
+    png = ChunkyPNG::Image.new(@width, @height)
+    
     @height.times do |y|
-      imag = @max_i - y*(@max_i - @min_i)/@height
+      imag = @max_i - y * delta_i
       @width.times do |x|
-        real = @min_r + x*(@max_r - @min_r)/@width
+        real = @min_r + x * delta_r
         z = Complex.rect(real, imag)
         comp = zfunc.call(z)
         h, s, l = comp_to_hsl(comp)
@@ -120,12 +135,17 @@ class ColorZ
         opt.banner = "Complex domain coloring\n" + opt.banner
         opt.banner += " FUNCTION"
         opt.separator("\nOptions:")
-        opt.on('-s=WxH', '--size',
-          'size(width=W, height=H) of the output image') {|v| opts[:s] = v}
+        
+        opt.on('-i=INPUT_FILE', '--input-file',
+          'file path of ruby script for a complex function') {|v| opts[:i] = v}
+        opt.on('-o=OUTPUT_FILE', '--output-file',
+          'file path of output image') {|v| opts[:o] = v}
         opt.on('-r=MIN,MAX', '--range',
           'coloring range (e.g. -r=-2-2i,+2+2i)') {|v| opts[:r] = v}
-        opt.on('-o=OUTPUT_FILE', '--out',
-          'file path of output image') {|v| opts[:o] = v}
+        opt.on('-s=WxH', '--size',
+          'size(width=W, height=H) of the output image') {|v| opts[:s] = v}
+        opt.on('-t', '--tile',
+          'the right/bottom edge shows slightly inner values than the maximum') {|v| opts[:t] = v}
 
         opt.parse!(ARGV)
       rescue => e
@@ -137,17 +157,17 @@ class ColorZ
     return opts
   end
 
-  def main(argv)
-    opts = opt_parse(argv)
-    
-    size = opts[:s]
+  def get_size(size)
     if size
       width, height = size.split("x").map {|n| n.to_i}
     else
       width, height = DEFAULT_WIDTH, DEFAULT_HEIGHT
     end
     
-    range = opts[:r]
+    return width, height
+  end
+  
+  def get_range(range)
     if range
       min, max = range.split(",").map {|s| s.to_c} 
       min_r = min.real.to_f
@@ -161,12 +181,42 @@ class ColorZ
       max_i = +4.0
     end
     
-    out = opts[:o]
-    if out
-      output_file = out
+    return min_r, min_i, max_r, max_i
+  end
+  
+  def get_output_file(output_file)
+    if output_file
+      output_file = output_file
     else
       output_file = "colorz.png"
     end
+    
+    return output_file
+  end
+  
+  def get_script(input_file, oneliner)
+    if input_file
+      if input_file == "-"
+        script = STDIN.read
+      else
+        script = File.read(input_file)
+      end
+    else
+      script = oneliner
+    end
+    script = DEFAULT_FUNTION if script.empty?
+    
+    return script
+  end
+
+  def main(argv)
+    opts = opt_parse(argv)
+    
+    width, height = get_size(opts[:s])
+    min_r, min_i, max_r, max_i = get_range(opts[:r])
+    
+    output_file = get_output_file(opts[:o])
+    script = get_script(opts[:i], argv.join(" "))
     
     dom_color = DomainColoring.new(
     {
@@ -176,11 +226,10 @@ class ColorZ
       max_i: max_i,
 
       width: width,
-      height: height
+      height: height,
+      
+      is_tile: opts[:t]
     })
-    
-    script = argv.join(" ")
-    script = DEFAULT_FUNTION if script.empty?
     png = dom_color.plot(script)
     png.save(output_file)
     
