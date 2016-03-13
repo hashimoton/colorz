@@ -65,8 +65,8 @@ The generated colorz.png is a domain coloring result of f(z) = z, where z covers
 
 The color in a point represents the result value of f(z) at the corresponding point on the complex plane.
 The hue represents the phase, as many other domain coloring methods do.
-White(bright) point means the magnitude is quite near one of 2^n (n: integer including negative numbers).
-Black(dark) point means either the real part or the imaginary part is an integer.
+A white(bright) point means the magnitude is quite near one of 2^n (n: integer including negative numbers).
+A black(dark) point means either the real part or the imaginary part is an integer.
 
 
 Another One
@@ -81,7 +81,7 @@ Try the sine function::
 
 Other examples are in gallery_
 
-.. gallery: https://github.com/hashimoton/colorz/wiki/Gallery
+.. _gallery: https://github.com/hashimoton/colorz/wiki/Gallery
 
 Options
 -------------
