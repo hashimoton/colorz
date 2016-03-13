@@ -13,6 +13,17 @@ Introduction
 Complex domain coloring (or "Domain Coloring") a color map of functions of a complex variable.
 
 
+
+============
+Requirements
+============
+
+* Ruby 2.2 or greater
+* RubyGems: ChunkyPNG_ , rgb_
+
+.. _ChunkyPNG: https://github.com/wvanbergen/chunky_png
+.. _rgb: https://github.com/plashchynski/rgb
+
 ========
 Setup
 ========
@@ -20,9 +31,9 @@ Setup
 1. Copy colorz into your convenient directory.
 
   - Windows users need to copy colorz.bat into the same directory.
-  - *nix users may need to give executable permission (chmod +x colorz). 
+  - *nix users may need executable permission (chmod +x colorz). 
   
-2. Add the directory into PATH environment.
+2. Include the directory in PATH.
 
 ========
 Usage
