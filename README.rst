@@ -6,11 +6,8 @@ Complex domain coloring
 
 .. image:: https://raw.githubusercontent.com/wiki/hashimoton/colorz/images/z.png
 
-=============
-Introduction
-=============
+Colorz is a fun tool that generates domain coloring for the given function of a complex variable z.
 
-Complex domain coloring (or "Domain Coloring") a color map of functions of a complex variable.
 
 
 
