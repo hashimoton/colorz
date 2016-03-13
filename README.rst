@@ -100,8 +100,35 @@ Options
       -t, --tile                       the right/bottom edge shows slightly inner values than the maximum
 
 
+=======
+Tips
+=======
+
+
+Get More Beautiful Image 
+------------------------------
+
+Plot twice as large as the target size.
+When you want a 400x400 image of f(z) = 1/z for example::
+
+  $ colorz -s 800x800 -o inv2.png 1/z
+
+Then shrink the image to the target size.
+If you have ImageMagick, convert command can do that::
+
+  $ convert -geometry 400x400 inv2.png inv.png
+
+
+Don't define constant in your function
+----------------------------------------
+
+Otherwise you will get lots of Ruby errors.
+
+
+
+=============
 Disclaimer
-------------
+=============
 
 On this tool, I prefer visual sweetness rather than the mathematical correctness.
 
