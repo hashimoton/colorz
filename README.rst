@@ -79,7 +79,7 @@ Try the sine function::
 .. image:: https://raw.githubusercontent.com/wiki/hashimoton/colorz/images/sin_z.png
 
 
-Other examples are in gallery_
+More examples are in gallery_.
 
 .. _gallery: https://github.com/hashimoton/colorz/wiki/Gallery
 
