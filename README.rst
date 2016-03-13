@@ -6,9 +6,15 @@ Complex domain coloring
 
 .. image:: https://raw.githubusercontent.com/wiki/hashimoton/colorz/images/z.png
 
-Colorz is a fun tool that generates domain coloring for the given function of a complex variable z.
+Colorz is a fun tool that generates `domain coloring`_ for the given function of a complex variable z.
+
+.. _domain coloring: https://en.wikipedia.org/wiki/Domain_coloring
 
 
+In other words, colorz is yet another implementation of:
+
+* http://www.jedsoft.org/fun/complex/
+* http://mathematica.stackexchange.com/questions/7275/how-can-i-generate-this-domain-coloring-plot
 
 
 ============
@@ -32,9 +38,53 @@ Setup
   
 2. Include the directory in PATH.
 
+
 ========
 Usage
 ========
+
+The First Result
+-----------------
+
+Try below::
+  
+  $ colorz
+
+After a few seconds, the command prints a full path to the generated PNG file and ends.
+
+::
+  
+  $ colorz
+  /working/dir/colorz.png
+  $
+
+
+The generated colorz.png is a domain coloring result of f(z) = z, where z covers from -4-4i to 4+4i.
+
+.. image:: https://raw.githubusercontent.com/wiki/hashimoton/colorz/images/colorz.png
+
+The color in a point represents the result value of f(z) at the corresponding point on the complex plane.
+The hue represents the phase, as many other domain coloring methods do.
+White(bright) point means the magnitude is quite near one of 2^n (n: integer including negative numbers).
+Black(dark) point means either the real part or the imaginary part is an integer.
+
+
+Another One
+------------
+
+Try the sine function::
+  
+  $ colorz sin(z)
+
+.. image:: https://raw.githubusercontent.com/wiki/hashimoton/colorz/images/sin_z.png
+
+
+Other examples are in gallery_
+
+.. gallery: https://github.com/hashimoton/colorz/wiki/Gallery
+
+Options
+-------------
 
 ::
   
@@ -49,3 +99,10 @@ Usage
       -s, --size=WxH                   size(width=W, height=H) of the output image
       -t, --tile                       the right/bottom edge shows slightly inner values than the maximum
 
+
+Disclaimer
+------------
+
+On this tool, I prefer visual sweetness rather than the mathematical correctness.
+
+.. EOF
