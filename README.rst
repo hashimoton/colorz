@@ -81,7 +81,7 @@ Try the sine function::
 
 More examples are in gallery_.
 
-.. _gallery: https://github.com/hashimoton/colorz/wiki/Gallery
+.. _gallery: https://colorz-g.tumblr.com/
 
 Options
 -------------
@@ -122,8 +122,7 @@ If you have ImageMagick, convert command can do that::
 Don't define constant in your function
 ----------------------------------------
 
-Otherwise you will get lots of Ruby errors.
-
+Otherwise you will see a flood of warnings "warning: already initialized constant..."
 
 
 =============
