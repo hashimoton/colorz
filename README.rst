@@ -89,18 +89,18 @@ Options
 ::
   
   $ colorz -h
-Complex domain coloring
-Usage: colorz [options] FUNCTION
-
-Options:
-    -d, --domain=MIN,MAX             coloring domain (e.g. -r=-2-2i,+2+2i)
-    -i, --input-file=INPUT_FILE      file path of ruby script for a complex function
-    -o, --output-file=OUTPUT_FILE    file path of output image
-    -s, --size=WxH                   size(width=W, height=H) of the output image
-    -t, --tile                       the right/bottom edge shows slightly inner values than the maximum
-
-FUNCTION:
-Ruby snipet that returns a value with a given parameter "z"
+  Complex domain coloring
+  Usage: colorz [options] FUNCTION
+  
+  Options:
+      -d, --domain=MIN,MAX             coloring domain (e.g. -r=-2-2i,+2+2i)
+      -i, --input-file=INPUT_FILE      file path of ruby script for a complex function
+      -o, --output-file=OUTPUT_FILE    file path of output image
+      -s, --size=WxH                   size(width=W, height=H) of the output image
+      -t, --tile                       the right/bottom edge shows slightly inner values than the maximum
+  
+  FUNCTION:
+  Ruby snipet that returns a value with a given parameter "z"
 
 
 =======
