@@ -131,17 +131,17 @@ class ColorZ
     
     OptionParser.new do |opt|
       begin
-        opt.version = '0.1.0'
+        opt.version = '0.2.0'
         opt.banner = "Complex domain coloring\n" + opt.banner
         opt.banner += " FUNCTION"
         opt.separator("\nOptions:")
         
+        opt.on('-d=MIN,MAX', '--domain',
+          'coloring domain (e.g. -r=-2-2i,+2+2i)') {|v| opts[:d] = v}
         opt.on('-i=INPUT_FILE', '--input-file',
           'file path of ruby script for a complex function') {|v| opts[:i] = v}
         opt.on('-o=OUTPUT_FILE', '--output-file',
           'file path of output image') {|v| opts[:o] = v}
-        opt.on('-r=MIN,MAX', '--range',
-          'coloring range (e.g. -r=-2-2i,+2+2i)') {|v| opts[:r] = v}
         opt.on('-s=WxH', '--size',
           'size(width=W, height=H) of the output image') {|v| opts[:s] = v}
         opt.on('-t', '--tile',
@@ -170,9 +170,9 @@ class ColorZ
     return width, height
   end
   
-  def get_range(range)
-    if range
-      min, max = range.split(",").map {|s| s.to_c} 
+  def get_domain(domain)
+    if domain
+      min, max = domain.split(",").map {|s| s.to_c} 
       min_r = min.real.to_f
       min_i = min.imag.to_f
       max_r = max.real.to_f
@@ -216,7 +216,7 @@ class ColorZ
     opts = opt_parse(argv)
     
     width, height = get_size(opts[:s])
-    min_r, min_i, max_r, max_i = get_range(opts[:r])
+    min_r, min_i, max_r, max_i = get_domain(opts[:d])
     
     output_file = get_output_file(opts[:o])
     script = get_script(opts[:i], argv.join(" "))
