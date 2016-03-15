@@ -98,6 +98,9 @@ Options
       -r, --range=MIN,MAX              coloring range (e.g. -r=-2-2i,+2+2i)
       -s, --size=WxH                   size(width=W, height=H) of the output image
       -t, --tile                       the right/bottom edge shows slightly inner values than the maximum
+  
+  FUNCTION:
+  'Ruby snipet that returns a value with a given parameter "z"
 
 
 =======
@@ -123,6 +126,7 @@ Don't define constant in your function
 ----------------------------------------
 
 Otherwise you will see a flood of warnings "warning: already initialized constant..."
+
 
 
 =============

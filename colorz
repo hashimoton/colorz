@@ -146,7 +146,10 @@ class ColorZ
           'size(width=W, height=H) of the output image') {|v| opts[:s] = v}
         opt.on('-t', '--tile',
           'the right/bottom edge shows slightly inner values than the maximum') {|v| opts[:t] = v}
-
+        
+        opt.separator("\nFUNCTION:")
+        opt.on('Ruby snipet that returns a value with a given parameter "z"')
+        
         opt.parse!(ARGV)
       rescue => e
         $stderr.puts "ERROR: #{e}.\n#{opt}"
