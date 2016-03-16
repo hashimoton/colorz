@@ -34,7 +34,7 @@ Setup
 1. Copy colorz into your convenient directory.
 
   - Windows users need to copy colorz.bat into the same directory.
-  - *nix users may need executable permission (chmod +x colorz). 
+  - \*nix users may need executable permission (chmod +x colorz). 
   
 2. Include the directory in PATH.
 
