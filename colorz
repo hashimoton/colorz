@@ -80,8 +80,8 @@ class DomainColoring
     zfunc = eval <<-EOS
       lambda do |z|
         result = #{script}
-        result = Complex.rect(0.0, result.imag) if result.real.to_f.nan?
-        result = Complex.rect(result.real, 0.0) if result.imag.to_f.nan?
+        result = Complex.rect(0.0, result.imag) unless result.real.to_f.finite?
+        result = Complex.rect(result.real, 0.0) unless result.imag.to_f.finite?
         return result
       end
     EOS
