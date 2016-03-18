@@ -31,6 +31,14 @@ class DomainColoring
     @is_tile = options[:is_tile]
   end
 
+  def surpress(x)
+    if x.finite?
+      x
+    else
+      0
+    end
+  end
+
   def min_max(a, b)
     if a <= b
       [a, b]
@@ -49,8 +57,8 @@ class DomainColoring
   end
 
   def grid(z)
-    real = sin(z.real * PI).abs
-    imag = sin(z.imag * PI).abs
+    real = surpress(sin(z.real * PI).abs)
+    imag = surpress(sin(z.imag * PI).abs)
     grid = [real, imag].min
     grid = [log(grid) / log(200), -1.0].max
     grid = 1.0 - grid * grid
