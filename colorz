@@ -48,12 +48,18 @@ class DomainColoring
   end
   
   def intensity(r)
-    if r == 0
-      r
-    else
-      log_2 = log2(r)
-      log_2 -= log_2.floor
+    intensity = 0.0
+    begin
+      if r == 0
+        intensity = 0.0
+      else
+        log_2 = log2(r)
+        intensity = log_2 - log_2.floor
+      end
+    rescue
     end
+    
+    return intensity
   end
 
   def grid(z)
