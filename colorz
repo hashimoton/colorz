@@ -164,7 +164,7 @@ class ColorZ
         opt.separator("\nFUNCTION:")
         opt.on('Ruby snipet that returns a value with a given parameter "z"')
         
-        opt.parse!(ARGV)
+        opt.parse!(argv)
       rescue => e
         $stderr.puts "ERROR: #{e}.\n#{opt}"
         exit
