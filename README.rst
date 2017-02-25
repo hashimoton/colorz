@@ -93,7 +93,7 @@ Options
   Usage: colorz [options] FUNCTION
   
   Options:
-      -d, --domain=MIN,MAX             coloring domain (e.g. -r=-2-2i,+2+2i)
+      -d, --domain=MIN,MAX             coloring domain (e.g. -d=-2-2i,+2+2i)
       -i, --input-file=INPUT_FILE      file path of ruby script for a complex function
       -o, --output-file=OUTPUT_FILE    file path of output image
       -s, --size=WxH                   size(width=W, height=H) of the output image

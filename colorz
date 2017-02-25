@@ -151,7 +151,7 @@ class ColorZ
         opt.separator("\nOptions:")
         
         opt.on('-d=MIN,MAX', '--domain',
-          'coloring domain (e.g. -r=-2-2i,+2+2i)') {|v| opts[:d] = v}
+          'coloring domain (e.g. -d=-2-2i,+2+2i)') {|v| opts[:d] = v}
         opt.on('-i=INPUT_FILE', '--input-file',
           'file path of ruby script for a complex function') {|v| opts[:i] = v}
         opt.on('-o=OUTPUT_FILE', '--output-file',
