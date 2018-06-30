@@ -108,7 +108,7 @@ Tips
 =======
 
 
-Get More Beautiful Image 
+Get more beautiful image 
 ------------------------------
 
 Plot twice as large as the target size.
@@ -127,6 +127,15 @@ Don't define constant in your function
 
 Otherwise you will see a flood of warnings "warning: already initialized constant..."
 
+
+Function starts with minus sign fails
+------------------------------------------
+
+The function below fails as invalid option::
+
+  $ colors "-z"
+
+Avoid minus sign "-" at the beginning. e.g. "0-z".
 
 
 =============
